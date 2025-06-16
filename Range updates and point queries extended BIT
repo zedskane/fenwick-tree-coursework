@@ -1,0 +1,28 @@
+class RangeFenwickTree:
+    def __init__(self, n):
+        self.n = n
+        self.bit1 = [0] * (n + 1)
+        self.bit2 = [0] * (n + 1)
+
+    def _add(self, bit, idx, val):
+        while idx <= self.n:
+            bit[idx] += val
+            idx += idx & -idx
+
+    def range_add(self, left, right, val):
+        self._add(self.bit1, left, val)
+        self._add(self.bit1, right + 1, -val)
+        self._add(self.bit2, left, val * (left - 1))
+        self._add(self.bit2, right + 1, -val * right)
+
+    def prefix_sum(self, idx):
+        res1 = res2 = 0
+        i = idx
+        while i > 0:
+            res1 += self.bit1[i]
+            res2 += self.bit2[i]
+            i -= i & -i
+        return res1 * idx - res2
+
+    def range_sum(self, left, right):
+        return self.prefix_sum(right) - self.prefix_sum(left - 1)
