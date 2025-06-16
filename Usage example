@@ -1,0 +1,8 @@
+if __name__ == "__main__":
+    data = [3, 2, -1, 6, 5, 4, -3, 3]
+    ft = FenwickTree(data)
+
+    print("Префиксная сумма до 5:", ft.sum(5))
+    print("Сумма на отрезке [3,6]:", ft.range_sum(3, 6))
+
+    visualize_fenwick(ft)
