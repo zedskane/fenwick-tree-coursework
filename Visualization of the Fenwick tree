@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+
+def visualize_fenwick(tree):
+    G = nx.DiGraph()
+    positions = {}
+    labels = {}
+
+    n = tree.n
+
+    for i in range(1, n + 1):
+        parent = i - (i & -i)
+        if parent != i:
+            G.add_edge(parent, i)
+
+        positions[i] = (i, -bin(i).count("1"))
+        labels[i] = f"{i}\n[{parent + 1}, {i}]\n{tree.tree[i]}"
+
+    plt.figure(figsize=(12, 6))
+    nx.draw(G, pos=positions, nodelist=positions.keys(),
+            with_labels=False, arrows=True, node_size=2500, node_color="lightblue", font_size=12)
+    nx.draw_networkx_labels(G, pos=positions, labels=labels, font_size=10)
+    plt.title("Дерево Фенвика")
+    plt.axis("off")
+    plt.show()
