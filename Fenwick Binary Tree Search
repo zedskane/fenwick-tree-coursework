@@ -1,0 +1,10 @@
+def lower_bound(tree, s):
+    idx = 0
+    n = len(tree) - 1
+    bit = 1 << (n.bit_length() - 1)
+    while bit:
+        if idx + bit <= n and tree[idx + bit] < s:
+            s -= tree[idx + bit]
+            idx += bit
+        bit >>= 1
+    return idx + 1
