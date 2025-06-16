@@ -1,6 +1,28 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
+class FenwickTree:
+    def __init__(self, data):
+        self.n = len(data)
+        self.tree = [0] * (self.n + 1)
+        for i in range(self.n):
+            self.add(i + 1, data[i])
+
+    def add(self, idx, value):
+        while idx <= self.n:
+            self.tree[idx] += value
+            idx += idx & -idx
+
+    def sum(self, idx):
+        res = 0
+        while idx > 0:
+            res += self.tree[idx]
+            idx -= idx & -idx
+        return res
+
+    def range_sum(self, left, right):
+        return self.sum(right) - self.sum(left - 1)
+
 def visualize_fenwick(tree):
     G = nx.DiGraph()
     positions = {}
@@ -10,7 +32,8 @@ def visualize_fenwick(tree):
 
     for i in range(1, n + 1):
         parent = i - (i & -i)
-        if parent != i:
+        # Only add edge if the parent is a valid node index (greater than 0)
+        if parent > 0:
             G.add_edge(parent, i)
 
         positions[i] = (i, -bin(i).count("1"))
@@ -23,3 +46,13 @@ def visualize_fenwick(tree):
     plt.title("Дерево Фенвика")
     plt.axis("off")
     plt.show()
+
+# Пример использования:
+
+data = [3, 2, -1, 6, 5, 4, -3, 3]
+ft = FenwickTree(data)
+
+print("Префиксная сумма до 5:", ft.sum(5))
+print("Сумма на отрезке [3,6]:", ft.range_sum(3, 6))
+
+visualize_fenwick(ft)
